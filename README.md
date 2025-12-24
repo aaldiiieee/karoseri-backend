@@ -2,29 +2,43 @@
 
 This is a FastAPI project for the final project of Pamulang University (UNPAM)
 
-## Installation Guide
+## Quick Start (Automation Scripts)
 
-1. **Clone this repository** (if using Git):
+### 1. Setup Environment
+Run the setup script to create the virtual environment and install all dependencies:
+```bash
+./setup.sh
+```
+
+### 2. Running the Application
+Use the run script to start the server.
+
+**Development Mode (with auto-reload):**
+```bash
+./run.sh --dev
+```
+
+**Production Mode:**
+```bash
+./run.sh --prod
+```
+
+## Manual Installation Guide (Alternative)
+
+1. **Clone this repository**:
     ```bash
     git clone https://github.com/aaldiiieee/karoseri-component-damage-classification.git
     cd karoseri-component-damage-classification
     ```
 
 2. **Create a Virtual Environment (VENV)**:
-   Ensure you are using Python 3
    ```bash
    python3 -m venv .venv
    ```
 
 3. **Activate the Virtual Environment**:
-   - **macOS/Linux**:
-     ```bash
-     source .venv/bin/activate
-     ```
-   - **Windows**:
-     ```bash
-     .venv\Scripts\activate
-     ```
+   - **macOS/Linux**: `source .venv/bin/activate`
+   - **Windows**: `.venv\Scripts\activate`
 
 4. **Install Dependencies**:
    ```bash
@@ -32,18 +46,11 @@ This is a FastAPI project for the final project of Pamulang University (UNPAM)
    pip install -r requirements.txt
    ```
 
-## Running the Application
+## Running the Application Manually
 
-Start the server using uvicorn (development mode):
-
+Start the server using uvicorn:
 ```bash
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Or using uvicorn (production mode):
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 Once running, you can access:

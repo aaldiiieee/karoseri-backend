@@ -1,47 +1,62 @@
 from typing import List, Optional
-from ..schemas.users import UserCreate, UserUpdate, UserResponse, User
+from uuid import UUID
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from ..models.users import User
+from ..schemas.user import UserCreate, UserUpdate
+import logging
+
+logger = logging.getLogger("app")
 
 class UserService:
-    def __init__(self):
-        self.users = []
-        self._id_counter = 1
-
-    def create_user(self, user_in: UserCreate) -> User:
+    async def create_user(self, db: AsyncSession, user_in: UserCreate) -> User:
+        logger.info("Creating user: %s", user_in)
         user = User(
-            id=self._id_counter,
-            username=user_in.username
+            username=user_in.username,
+            password=user_in.password, # TODO: Password should be hashed in real application
+            role=user_in.role,
+            is_active=user_in.is_active
         )
-        # In a real app, we would hash the password here
-        # user_data = user_in.model_dump()
-        # user_data["id"] = self._id_counter
-        self.users.append({"id": self._id_counter, "username": user_in.username, "password": user_in.password})
-        self._id_counter += 1
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        logger.info("User created: %s", user)
         return user
 
-    def get_user(self, user_id: int) -> Optional[User]:
-        for u in self.users:
-            if u["id"] == user_id:
-                return User(id=u["id"], username=u["username"])
-        return None
+    async def get_user(self, db: AsyncSession, user_id: UUID) -> Optional[User]:
+        logger.info("Getting user: %s", user_id)
+        result = await db.execute(select(User).where(User.id == user_id))
+        return result.scalars().first()
 
-    def get_users(self) -> List[User]:
-        return [User(id=u["id"], username=u["username"]) for u in self.users]
+    async def get_users(self, db: AsyncSession) -> List[User]:
+        logger.info("Getting users")
+        result = await db.execute(select(User))
+        return result.scalars().all()
 
-    def update_user(self, user_id: int, user_in: UserUpdate) -> Optional[User]:
-        for u in self.users:
-            if u["id"] == user_id:
-                if user_in.username:
-                    u["username"] = user_in.username
-                if user_in.password:
-                    u["password"] = user_in.password
-                return User(id=u["id"], username=u["username"])
-        return None
+    async def update_user(self, db: AsyncSession, user_id: UUID, user_in: UserUpdate) -> Optional[User]:
+        result = await db.execute(select(User).where(User.id == user_id))
+        user = result.scalars().first()
+        
+        if not user:
+            return None
+            
+        update_data = user_in.model_dump(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(user, key, value)
+            
+        await db.commit()
+        await db.refresh(user)
+        return user
 
-    def delete_user(self, user_id: int) -> bool:
-        for i, u in enumerate(self.users):
-            if u["id"] == user_id:
-                self.users.pop(i)
-                return True
-        return False
+    async def delete_user(self, db: AsyncSession, user_id: UUID) -> bool:
+        result = await db.execute(select(User).where(User.id == user_id))
+        user = result.scalars().first()
+        
+        if not user:
+            return False
+            
+        await db.delete(user)
+        await db.commit()
+        return True
 
 user_service = UserService()

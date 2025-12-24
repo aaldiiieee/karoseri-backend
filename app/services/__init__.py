@@ -1,1 +1,1 @@
-from app.services.item_service import item_service
+from .user_service import user_service
