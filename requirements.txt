@@ -12,3 +12,6 @@ psycopg2-binary
 pyjwt
 greenlet
 python-jose[cryptography]
+numpy
+scikit-learn
+python-multipart

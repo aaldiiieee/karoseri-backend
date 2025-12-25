@@ -28,6 +28,8 @@ app = FastAPI(
         "A Karoseri Component Damage Classification API for PT. Sukses Tunggal Mandiri using FastAPI \n"
         "### Features\n"
         "- **User Management System**: Manage user accounts, roles, and permissions\n"
+        "- **Component Management System**: Manage component accounts, roles, and permissions\n"
+        "- **Damage Classification System**: Manage damage classification accounts, roles, and permissions\n"
         "### Timezone\n"
         "All timestamps are in Asia/Jakarta timezone (UTC+7).\n",
     version="1.0.0",

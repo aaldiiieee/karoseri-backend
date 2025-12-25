@@ -8,7 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
-    """Middleware untuk logging semua request dan response."""
+    """Middleware for logging all request and response."""
     
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         request_id = str(uuid.uuid4())[:8]
@@ -21,7 +21,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         # Get client IP
         client_ip = request.client.host if request.client else "unknown"
         
-        # Log request - format langsung di message
+        # Log request
         logging.info(
             f"[{request_id}] Request: {request.method} {request.url.path} "
             f"| IP: {client_ip} | User-Agent: {user_agent_short}"

@@ -16,17 +16,21 @@ router = APIRouter(
     },
 )
 
+
 logger = logging.getLogger("app")
+
 
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
     """Create a new user."""
     return await user_service.create_user(db, user_in)
 
+
 @router.get("/", response_model=List[UserResponse])
 async def read_users(db: AsyncSession = Depends(get_db)):
     """Read all users."""
     return await user_service.get_users(db)
+
 
 @router.get("/{user_id}", response_model=UserResponse)
 async def read_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
@@ -36,6 +40,7 @@ async def read_user(user_id: UUID, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+
 @router.put("/{user_id}", response_model=UserResponse)
 async def update_user(user_id: UUID, user_in: UserUpdate, db: AsyncSession = Depends(get_db)):
     """Update a user by ID."""
@@ -43,6 +48,7 @@ async def update_user(user_id: UUID, user_in: UserUpdate, db: AsyncSession = Dep
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(user_id: UUID, db: AsyncSession = Depends(get_db)):

@@ -3,8 +3,8 @@ from pydantic import Field, BaseModel
 
 class ComponentBase(BaseModel):
     """Base schema for Component."""
-    component_code: str = Field(..., min_length=1, max_length=50, examples=["KRS-001"])
-    component_name: str = Field(..., min_length=1, max_length=100, examples=["Roof Panel"])
+    code: str = Field(..., min_length=1, max_length=50, examples=["KRS-001"])
+    name: str = Field(..., min_length=1, max_length=100, examples=["Roof Panel"])
     category: str = Field(..., min_length=1, max_length=50, examples=["Body Panel"])
     description: Optional[str] = Field(None, examples=["Roof section panel of the vehicle"])
 
@@ -16,11 +16,11 @@ class ComponentCreate(ComponentBase):
 
 class ComponentUpdate(BaseModel):
     """Schema for updating Component (all fields optional)."""
-    component_code: Optional[str] = Field(None, min_length=1, max_length=50)
-    component_name: Optional[str] = Field(None, min_length=1, max_length=100)
-    category: Optional[str] = Field(None, min_length=1, max_length=50)
-    description: Optional[str] = None
-    is_active: Optional[bool] = None
+    code: Optional[str] = Field(None, min_length=1, max_length=50, examples=["KRS-001"])
+    name: Optional[str] = Field(None, min_length=1, max_length=100, examples=["Roof Panel"])
+    category: Optional[str] = Field(None, min_length=1, max_length=50, examples=["Body Panel"])
+    description: Optional[str] = Field(None, examples=["Roof section panel of the vehicle"])
+    is_active: Optional[bool] = Field(None, examples=[True])
 
 
 class ComponentResponse(ComponentBase):
