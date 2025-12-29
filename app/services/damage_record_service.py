@@ -36,7 +36,8 @@ class DamageRecordService:
         await db.refresh(record)
         
         logger.info(f"Damage record created: {record.id}")
-        return record
+        return await self.get_by_id(db, record.id)
+
     
     async def get_by_id(self, db: AsyncSession, record_id: UUID) -> Optional[DamageRecord]:
         """Get damage record by ID with component."""
@@ -48,6 +49,7 @@ class DamageRecordService:
             .where(DamageRecord.id == record_id)
         )
         return result.scalars().first()
+
     
     async def get_all(
         self,
@@ -85,6 +87,7 @@ class DamageRecordService:
         items = result.scalars().all()
         
         return list(items), total
+
     
     async def update(
         self,
@@ -96,15 +99,18 @@ class DamageRecordService:
         logger.info(f"Updating damage record: {record_id}")
         
         record = await self.get_by_id(db, record_id)
+        # If record not found, return None
         if not record:
             return None
         
+        # Update record
         update_data = data.model_dump(exclude_unset=True)
         
-        # Handle damage_level enum conversion
+        # If damage_level is in update_data, convert it to DamageLevel
         if "damage_level" in update_data:
             update_data["damage_level"] = DamageLevel(update_data["damage_level"])
         
+        # Update record
         for key, value in update_data.items():
             setattr(record, key, value)
         
@@ -112,7 +118,8 @@ class DamageRecordService:
         await db.refresh(record)
         
         logger.info(f"Damage record updated: {record_id}")
-        return record
+        return await self.get_by_id(db, record.id)
+
     
     async def delete(self, db: AsyncSession, record_id: UUID) -> bool:
         """Delete a damage record."""
@@ -127,11 +134,13 @@ class DamageRecordService:
         
         logger.info(f"Damage record deleted: {record_id}")
         return True
+
     
     async def get_count(self, db: AsyncSession) -> int:
         """Get total damage record count."""
         result = await db.execute(select(func.count(DamageRecord.id)))
         return result.scalar() or 0
+
     
     async def get_distribution(self, db: AsyncSession) -> DamageDistribution:
         """Get damage level distribution."""
@@ -154,6 +163,7 @@ class DamageRecordService:
             distribution["total"] += count
         
         return DamageDistribution(**distribution)
+
     
     async def get_training_data(self, db: AsyncSession) -> tuple[list[list[float]], list[str]]:
         """Get all damage records as training data."""
@@ -171,6 +181,7 @@ class DamageRecordService:
         
         logger.info(f"Training data retrieved: {len(features)} samples")
         return features, labels
+
     
     async def bulk_create(
         self,

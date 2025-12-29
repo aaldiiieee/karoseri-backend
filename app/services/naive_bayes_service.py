@@ -15,7 +15,7 @@ from sklearn.metrics import (
     confusion_matrix
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 
 # Model storage path
 MODEL_DIR = "trained_models"

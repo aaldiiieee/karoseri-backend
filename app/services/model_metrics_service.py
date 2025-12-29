@@ -8,7 +8,7 @@ from app.models.model_metrics import ModelMetrics
 from app.services.naive_bayes_service import naive_bayes_service
 from app.services.damage_record_service import damage_record_service
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 
 
 class ModelMetricsService:

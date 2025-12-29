@@ -10,7 +10,7 @@ from app.models.damage_record import DamageLevel
 from app.schemas.prediction import PredictionRequest
 from app.services.naive_bayes_service import naive_bayes_service
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 
 
 class PredictionService:
