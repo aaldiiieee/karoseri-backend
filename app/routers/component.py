@@ -57,15 +57,7 @@ async def get_components(
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     search: Optional[str] = Query(None, description="Search by code or name"),
     db: AsyncSession = Depends(get_db),
-    current_user: TokenData = Depends(get_current_user)
 ):
-    """Get all components with pagination and filters."""
-    if current_user.role != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="Anda tidak memiliki hak akses untuk mengakses resource ini"
-        )
-
     items, total = await component_service.get_all(
         db, page=page, size=size, category=category, is_active=is_active, search=search
     )
