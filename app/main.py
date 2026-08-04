@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 import os
 import time
+import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import router
 from .configs.swagger_config import swagger_config
